@@ -17,18 +17,23 @@ export const generateVideo = async (req, res) => {
         const imageFile = image[0];
         const audioFile = audio[0];
 
-        // Save initial record
+        // Save initial record (Optional: only if DB is connected)
         let videoRecord;
-        try {
-            videoRecord = new Video({
-                title: 'AI Narrator Video',
-                imageUrl: `http://localhost:5000/uploads/${imageFile.filename}`,
-                audioUrl: `http://localhost:5000/uploads/${audioFile.filename}`,
-                status: 'processing'
-            });
-            await videoRecord.save();
-        } catch (dbError) {
-            console.warn('Database not available, skipping save.');
+        const isDbConnected = mongoose.connection.readyState === 1;
+        
+        if (isDbConnected) {
+            try {
+                videoRecord = new Video({
+                    sourceImage: `http://localhost:5000/uploads/${imageFile.filename}`,
+                    sourceAudio: `http://localhost:5000/uploads/${audioFile.filename}`,
+                    status: 'processing'
+                });
+                await videoRecord.save();
+            } catch (dbError) {
+                console.warn('Database Initial Save Error:', dbError.message);
+            }
+        } else {
+            console.warn('Database not connected, skipping record creation.');
         }
 
         console.log('Running Local Wav2Lip AI locally on your system...');
@@ -59,10 +64,14 @@ export const generateVideo = async (req, res) => {
         const videoUrl = `http://localhost:5000/uploads/${outputFileName}`;
         console.log('Wav2Lip generation complete!', videoUrl);
 
-        if (videoRecord) {
-            videoRecord.videoUrl = videoUrl;
-            videoRecord.status = 'completed';
-            await videoRecord.save();
+        if (videoRecord && isDbConnected) {
+            try {
+                videoRecord.videoUrl = videoUrl;
+                videoRecord.status = 'completed';
+                await videoRecord.save();
+            } catch (dbError) {
+                console.warn('Database Final Update Error:', dbError.message);
+            }
         }
 
         res.status(200).json({

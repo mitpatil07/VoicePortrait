@@ -35,14 +35,14 @@ export default function NarratorForm({ onGenerate }) {
     <form onSubmit={handleSubmit} className="narrator-form">
       <div className="form-group">
         <label>Character Portrait (JPG/PNG)</label>
+        <input 
+          type="file" 
+          accept="image/*" 
+          ref={imageInputRef}
+          onChange={handleImageChange}
+          style={{ display: 'none' }}
+        />
         <div className="file-drop-area" onClick={() => imageInputRef.current.click()}>
-          <input 
-            type="file" 
-            accept="image/*" 
-            ref={imageInputRef}
-            onChange={handleImageChange}
-            className="hidden"
-          />
           <ImageIcon size={32} className="file-icon" />
           <div className="file-drop-text">
             {imageFile ? (
@@ -56,14 +56,14 @@ export default function NarratorForm({ onGenerate }) {
 
       <div className="form-group">
         <label>Narration Audio (WAV/MP3)</label>
+        <input 
+          type="file" 
+          accept="audio/*" 
+          ref={audioInputRef}
+          onChange={handleAudioChange}
+          style={{ display: 'none' }}
+        />
         <div className="file-drop-area" onClick={() => audioInputRef.current.click()}>
-          <input 
-            type="file" 
-            accept="audio/*" 
-            ref={audioInputRef}
-            onChange={handleAudioChange}
-            className="hidden"
-          />
           <FileAudio size={32} className="file-icon" />
           <div className="file-drop-text">
             {audioFile ? (
