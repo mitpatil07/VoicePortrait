@@ -1,14 +1,12 @@
-import { useState, useRef } from 'react';
-import { Upload, Image as ImageIcon, FileAudio, Video } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Upload, ImageIcon, FileAudio, Play } from 'lucide-react';
 
 export default function NarratorForm({ onGenerate }) {
   const [imageFile, setImageFile] = useState(null);
   const [audioFile, setAudioFile] = useState(null);
-  const [mouthFiles, setMouthFiles] = useState([]);
   
   const imageInputRef = useRef(null);
   const audioInputRef = useRef(null);
-  const mouthsInputRef = useRef(null);
 
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -22,12 +20,6 @@ export default function NarratorForm({ onGenerate }) {
     }
   };
 
-  const handleMouthsChange = (e) => {
-    if (e.target.files) {
-      setMouthFiles(Array.from(e.target.files));
-    }
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!imageFile || !audioFile) return;
@@ -35,23 +27,21 @@ export default function NarratorForm({ onGenerate }) {
     const formData = new FormData();
     formData.append('image', imageFile);
     formData.append('audio', audioFile);
-    mouthFiles.forEach(file => {
-      formData.append('mouths', file);
-    });
 
     onGenerate(formData);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="narrator-form">
       <div className="form-group">
-        <label>Character Image (PNG/JPG)</label>
-        <div className="file-drop-area">
+        <label>Character Portrait (JPG/PNG)</label>
+        <div className="file-drop-area" onClick={() => imageInputRef.current.click()}>
           <input 
             type="file" 
-            accept="image/png, image/jpeg" 
+            accept="image/*" 
             ref={imageInputRef}
             onChange={handleImageChange}
+            className="hidden"
           />
           <ImageIcon size={32} className="file-icon" />
           <div className="file-drop-text">
@@ -66,12 +56,13 @@ export default function NarratorForm({ onGenerate }) {
 
       <div className="form-group">
         <label>Narration Audio (WAV/MP3)</label>
-        <div className="file-drop-area">
+        <div className="file-drop-area" onClick={() => audioInputRef.current.click()}>
           <input 
             type="file" 
-            accept="audio/wav, audio/mpeg, audio/mp3" 
+            accept="audio/*" 
             ref={audioInputRef}
             onChange={handleAudioChange}
+            className="hidden"
           />
           <FileAudio size={32} className="file-icon" />
           <div className="file-drop-text">
@@ -84,33 +75,12 @@ export default function NarratorForm({ onGenerate }) {
         </div>
       </div>
 
-      <div className="form-group">
-        <label>Mouth Sprites (A.png, B.png, etc. - Optional)</label>
-        <div className="file-drop-area">
-          <input 
-            type="file" 
-            multiple
-            accept="image/png" 
-            ref={mouthsInputRef}
-            onChange={handleMouthsChange}
-          />
-          <ImageIcon size={32} className="file-icon" />
-          <div className="file-drop-text">
-            {mouthFiles.length > 0 ? (
-              <span style={{ color: 'var(--text-main)' }}>{mouthFiles.length} sprites selected</span>
-            ) : (
-              <>Optional: Select <strong>mouth sprites</strong> (A-F)</>
-            )}
-          </div>
-        </div>
-      </div>
-
       <button 
         type="submit" 
         className="btn btn-primary"
         disabled={!imageFile || !audioFile}
       >
-        <Video size={20} />
+        <Play size={20} fill="currentColor" />
         Generate Cinematic Video
       </button>
     </form>

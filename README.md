@@ -1,13 +1,13 @@
 # 🎙️ VoicePortrait
 
-**VoicePortrait** is a professional-grade, open-source AI platform designed to transform static 2D illustrations and anime characters into cinematic, talking narrators. By combining advanced audio analysis with frame-by-frame sprite animation and neural lip-syncing, VoicePortrait delivers high-fidelity video output optimized for 2D aesthetics.
+**VoicePortrait** is a professional-grade, open-source AI platform designed to transform static 2D illustrations and anime characters into cinematic, talking narrators. By combining the power of the Wav2Lip neural engine with a custom 2D-optimized face detection pipeline, VoicePortrait delivers high-fidelity video output for stylized characters.
 
 ---
 
 ## ✨ Key Features
 
-- **🎨 2D/Anime Optimized:** Specifically engineered to handle stylized characters that traditional AI models often fail to process.
-- **👄 Precision Lip-Sync:** Perfect alignment for both **Hindi and English** narration using viseme-based audio analysis.
+- **🎨 2D/Anime Optimized:** Specifically engineered to handle stylized characters using a custom LBP cascade fallback.
+- **👄 Neural Lip-Sync:** High-quality alignment using the Wav2Lip GAN model.
 - **⚡ 100% Local & Private:** Runs entirely on your own hardware. No expensive APIs, no cloud subscriptions, and zero data leakage.
 - **🎥 Cinematic Output:** High-definition MP4 rendering with smooth frame-to-frame transitions.
 - **🛠️ Custom Sprite Support:** Upload your own mouth shapes to create unique, hand-crafted animations for your characters.
@@ -19,8 +19,8 @@
 
 - **Frontend:** React.js (Vite), Lucide Icons, Modern CSS3
 - **Backend:** Node.js (Express), Multer for binary handling
-- **AI/Audio Engine:** Python (Wav2Lip), Rhubarb Lip Sync
-- **Video Processing:** FFmpeg, Sharp (Image Compositing)
+- **AI/Audio Engine:** Python (Wav2Lip)
+- **Video Processing:** FFmpeg, OpenCV (Face Detection)
 
 ---
 
@@ -33,10 +33,10 @@ VoicePortrait/
 │   │   ├── components/ # UI Components (NarratorForm, etc.)
 │   │   └── App.jsx     # Main Logic
 ├── backend/            # Express Server
-│   ├── controllers/    # Rhubarb & Wav2Lip Orchestration
+│   ├── controllers/    # Wav2Lip Orchestration
 │   ├── routes/         # API Endpoints
 │   ├── uploads/        # Temporary Frame & Audio Storage
-│   └── rhubarb/        # Rhubarb Lip Sync Binaries
+│   └── Wav2Lip/        # Core AI Engine
 └── README.md
 ```
 
@@ -57,9 +57,9 @@ npm install
 # Ensure FFmpeg is installed on your system path
 ```
 
-### 3. AI Weights & Binaries
-- Download `rhubarb-lip-sync` and place it in the `backend/rhubarb/` directory.
-- (Optional) Download `wav2lip_gan.pth` if using neural mode.
+### 3. AI Weights
+- Download `wav2lip_gan.pth` and place it in `backend/Wav2Lip/checkpoints/`.
+- Download `lbpcascade_animeface.xml` and place it in `backend/Wav2Lip/`.
 
 ### 4. Frontend Setup
 ```bash
@@ -84,7 +84,6 @@ npm run dev
 This project stands on the shoulders of giants. Special thanks to:
 
 - **[Wav2Lip](https://github.com/Rudrabha/Wav2Lip):** For the neural lip-sync foundation.
-- **[Rhubarb Lip Sync](https://github.com/DanielSWolf/rhubarb-lip-sync):** For the incredible 2D audio-to-viseme engine.
 - **[FFmpeg](https://ffmpeg.org/):** The Swiss Army knife for our video processing pipeline.
 
 ---
