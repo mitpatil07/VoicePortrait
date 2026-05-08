@@ -12,39 +12,46 @@ export default function VideoResult({ url, onReset }) {
   };
 
   return (
-    <div className="video-result-container animate-fadeIn">
+    <div className="video-result-container animate-fadeIn" style={{ maxWidth: '100%', margin: '0 auto' }}>
       <div className="card-header" style={{ marginBottom: '2rem', textAlign: 'center' }}>
         <div style={{ 
           display: 'inline-flex', 
           alignItems: 'center', 
           gap: '0.5rem', 
-          background: 'rgba(34, 197, 94, 0.1)', 
-          color: '#4ade80',
+          background: '#f0fdf4', 
+          color: '#16a34a',
           padding: '0.5rem 1rem',
           borderRadius: '100px',
           fontSize: '0.8rem',
-          fontWeight: '600',
-          marginBottom: '1rem'
+          fontWeight: '700',
+          marginBottom: '1rem',
+          border: '1px solid #dcfce7'
         }}>
           ✨ Generation Complete
         </div>
-        <h2 style={{ fontSize: '1.8rem', marginBottom: '0.5rem' }}>Your Portrait is Alive!</h2>
+        <h2 style={{ fontSize: '1.8rem', fontWeight: '800', marginBottom: '0.5rem' }}>Your Portrait is Alive!</h2>
       </div>
 
       <div className="video-preview-card" style={{ 
         background: '#000', 
-        borderRadius: '20px', 
-        padding: '8px', 
+        borderRadius: '24px', 
+        padding: '12px', 
         border: '1px solid var(--glass-border)',
-        boxShadow: '0 0 40px rgba(99, 102, 241, 0.2)'
+        boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+        maxWidth: '100%',
+        margin: '0 auto'
       }}>
         <video 
           src={url} 
           controls 
           autoPlay 
           style={{ 
-            borderRadius: '14px',
-            display: 'block'
+            width: '100%',
+            height: 'auto',
+            maxHeight: '500px',
+            borderRadius: '16px',
+            display: 'block',
+            objectFit: 'contain'
           }}
         />
       </div>

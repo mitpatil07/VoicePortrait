@@ -53,10 +53,27 @@ export const generateVideo = async (req, res) => {
 
         console.log('Executing Command:', command);
         
+        let childProcess;
+        
+        // Listen for client disconnect to kill the process
+        req.on('close', () => {
+            if (childProcess) {
+                console.log('Client disconnected. Killing process:', childProcess.pid);
+                childProcess.kill('SIGINT');
+            }
+        });
+
         try {
-            const { stdout, stderr } = await execPromise(command, { cwd: path.join(process.cwd(), 'Wav2Lip') });
+            const execPromise = util.promisify(exec);
+            const { stdout, stderr } = await new Promise((resolve, reject) => {
+                childProcess = exec(command, { cwd: path.join(process.cwd(), 'Wav2Lip') }, (error, stdout, stderr) => {
+                    if (error) reject({ error, stderr });
+                    else resolve({ stdout, stderr });
+                });
+            });
             console.log('Wav2Lip Output:', stdout);
         } catch (execError) {
+            if (req.closed) return; // Ignore if we killed it intentionally
             console.error('Wav2Lip Execution Failed:', execError.stderr);
             return res.status(500).json({ error: 'Local AI Generation Failed. Ensure FFmpeg is installed.' });
         }

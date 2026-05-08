@@ -29,7 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(uploadsDir));
 
 // Routes
-app.use('/api/video', videoRoutes);
+app.use('/api/videos', videoRoutes);
 
 // Database connection (Optional if URI provided, else skip to run without DB)
 if (process.env.MONGODB_URI) {
