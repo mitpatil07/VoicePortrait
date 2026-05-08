@@ -46,7 +46,7 @@ VoicePortrait/
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-username/voiceportrait.git
+git clone https://github.com/mitpatil07/voiceportrait.git
 cd voiceportrait
 ```
 
